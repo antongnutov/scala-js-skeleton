@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="30">
+    <Appenders>
+        <File name="logfile" fileName="/opt/scala-js-app/logs/app.log">
+            <PatternLayout>
+                <Pattern>%d [%-5p] %c{1} - %m %ex%n</Pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="server" level="debug" additivity="false">
+            <AppenderRef ref="logfile"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="logfile"/>
+        </Root>
+    </Loggers>
+</Configuration>

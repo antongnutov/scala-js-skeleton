@@ -1,0 +1,16 @@
+# Runtime data
+pids
+*.pid
+*.seed
+
+.idea
+/build
+/project/project
+/project/target
+/target
+/app/jvm/target
+/app/js/target
+/app/shared/target
+/webapp/js
+
+.DS_Store
