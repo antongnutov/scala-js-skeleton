@@ -3,6 +3,15 @@
 
 ---
 
+## Get started
+### Run the server locally
+1. Install [SBT](http://www.scala-sbt.org/)
+2. Start SBT in the project's root directory
+3. Compile client module: `appJS/fullOptJS`
+4. Start server: `appJVM/run`
+5. Point your browser to `localhost:8080`
+6. Stop running application by stopping sbt with `crtl + C`
+
 ## Project structure
  * Backend code is in `app/jvm`. This includes code for the web server and connecting to the database. It will run on the JVM.
  * Frontend code is in `app/js`. This code will be translated to JavaScript and run in the client's browser.
