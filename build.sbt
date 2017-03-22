@@ -48,17 +48,14 @@ lazy val app = crossProject.in(file("./app")).
     // Include the JavaScript dependencies
     skip in packageJSDependencies := false,
 
-    // copy jsdeps and launcher into static folder
-    Seq(packageMinifiedJSDependencies, packageScalaJSLauncher) map { packageJSKey =>
-      crossTarget in(Compile, packageJSKey) := scalajsOutputDir.value
-    },
+    // copy jsdeps into static folder
+    crossTarget in(Compile, packageMinifiedJSDependencies) := scalajsOutputDir.value,
 
     // the same js filename for `fastOptJS` and `fullOptJS`
     artifactPath in Compile in fastOptJS := scalajsOutputDir.value / ((moduleName in fastOptJS).value + ".js"),
     artifactPath in Compile in fullOptJS := scalajsOutputDir.value / ((moduleName in fullOptJS).value + ".js"),
 
-    persistLauncher in Compile := true,
-    persistLauncher in Test := false
+    scalaJSUseMainModuleInitializer := true
   )
 
 lazy val client = app.js.settings(
