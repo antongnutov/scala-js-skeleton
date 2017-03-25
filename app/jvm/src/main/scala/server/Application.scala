@@ -1,37 +1,16 @@
 package server
 
-import java.io.File
-
-import com.typesafe.config.ConfigFactory
-import org.http4s._
-import org.http4s.dsl._
-import org.http4s.server.{Server, ServerApp}
+import com.typesafe.config.{Config, ConfigFactory}
 import org.http4s.server.blaze._
+import org.http4s.server.{Server, ServerApp}
 
 import scalaz.concurrent.Task
 
-object Application extends ServerApp with LazyLogging {
+object Application extends ApplicationService with ServerApp with LazyLogging {
 
-  private val config = ConfigFactory.load()
-
-  private val staticPath = config.getString("static-path") + "/"
-
-  private val staticExtensions = List(".js", ".css", ".png", ".jpg", ".jpeg", ".map", ".html", ".webm", ".ico")
+  val config: Config = ConfigFactory.load()
 
   override def server(args: List[String]): Task[Server] = {
-
-    def staticFile(file: String, request: Request) = {
-      StaticFile.fromFile(new File(staticPath + file), Some(request)).map(Task.now).getOrElse(NotFound())
-    }
-
-    val service = HttpService {
-      case request @ GET -> Root =>
-        logger.debug("Detected connection from '{}'", request.remoteAddr.getOrElse(""))
-        staticFile("index.html", request)
-
-      case request @ GET -> Root / path / resource if staticExtensions.exists(resource.endsWith) =>
-        staticFile(s"$path/$resource", request)
-    }
 
     printRuntimeInfo()
 
