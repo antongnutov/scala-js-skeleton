@@ -9,7 +9,6 @@ import scala.scalajs.js.JSApp
   */
 object Application extends JSApp {
 
-  @scala.scalajs.js.annotation.JSExport
   override def main(): Unit = {
     StartPage()
   }
