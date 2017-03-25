@@ -5,4 +5,5 @@ object Versions {
 
   val config = "1.3.1"
   val log4j = "2.8"
+  val scalatest = "3.0.1"
 }

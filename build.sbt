@@ -30,7 +30,9 @@ lazy val app = crossProject.in(file("./app")).
       "com.typesafe" % "config" % Versions.config,
 
       "org.apache.logging.log4j" % "log4j-api" % Versions.log4j,
-      "org.apache.logging.log4j" % "log4j-slf4j-impl" % Versions.log4j
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % Versions.log4j,
+
+      "org.scalatest" %% "scalatest" % Versions.scalatest
     ),
 
     mappings in (Compile, packageDoc) := Seq(),
