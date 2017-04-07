@@ -12,7 +12,7 @@ import scalaz.concurrent.Task
 /**
   * @author Anton Gnutov
   */
-trait ApplicationService { self: LazyLogging =>
+trait ApplicationService { self: LazyLogging with JokesGenerator =>
   def config: Config
 
   private lazy val staticPath = config.getString("static-path") + "/"
@@ -30,6 +30,9 @@ trait ApplicationService { self: LazyLogging =>
       case request@GET -> Root =>
         logger.debug("Detected connection from '{}'", request.remoteAddr.getOrElse(""))
         staticFile("index.html", request)
+
+      case GET -> Root / "getJoke" =>
+        Ok(getJoke)
 
       case request@GET -> Root / path / resource if isStaticResource(resource) =>
         staticFile(s"$path/$resource", request)

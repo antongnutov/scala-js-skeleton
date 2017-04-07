@@ -1,6 +1,6 @@
 package client.component
 
-import org.scalajs.dom.Event
+import org.scalajs.dom.{Event, ext}
 import org.scalajs.dom.html.Element
 
 import scala.annotation.tailrec
@@ -15,14 +15,23 @@ class Jokes {
   private val joke = p(id := "joke", cls := "splash-subhead", Jokes.getJoke).render
 
   private val button = a(href := "#", cls := "pure-button pure-button-primary")("Next Joke").render
+  private val ajaxButton = a(href := "#", cls := "pure-button pure-button-primary")("Next Joke (Ajax)").render
 
   button.onclick = (_: Event) => {
     joke.innerHTML = Jokes.getJoke
   }
 
+  ajaxButton.onclick = (_: Event) => {
+    import scala.concurrent.ExecutionContext.Implicits.global
+    ext.Ajax.get("/getJoke").foreach { xhr =>
+      joke.innerHTML = xhr.responseText
+    }
+  }
+
   def render: Element = {
     div(
       p(button),
+      p(ajaxButton),
       joke
     ).render
   }

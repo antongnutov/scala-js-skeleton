@@ -6,7 +6,7 @@ import org.http4s.server.{Server, ServerApp}
 
 import scalaz.concurrent.Task
 
-object Application extends ApplicationService with ServerApp with LazyLogging {
+object Application extends ApplicationService with ServerApp with LazyLogging with JokesGenerator {
 
   val config: Config = ConfigFactory.load()
 

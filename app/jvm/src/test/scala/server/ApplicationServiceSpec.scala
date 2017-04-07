@@ -9,7 +9,7 @@ import org.scalatest.{Matchers, WordSpec}
 /**
   * @author Anton Gnutov
   */
-class ApplicationServiceSpec extends WordSpec with Matchers with ApplicationService with LazyLogging {
+class ApplicationServiceSpec extends WordSpec with Matchers with ApplicationService with LazyLogging with JokesGenerator {
   val config: Config = ConfigFactory.load()
 
   "ApplicationService" should {
@@ -40,6 +40,15 @@ class ApplicationServiceSpec extends WordSpec with Matchers with ApplicationServ
       val response = service(req).unsafePerformSync
 
       response.status shouldEqual Status.NotFound
+    }
+
+    "answer joke on /getJoke request" in {
+      val req = Request(Method.GET, uri("/getJoke"))
+      val response = service(req).unsafePerformSync
+
+      response.status shouldEqual Status.Ok
+      val joke = response.as[String].unsafePerformSync
+      jokes should contain(joke)
     }
   }
 }
