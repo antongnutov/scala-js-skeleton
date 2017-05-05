@@ -1,8 +1,8 @@
 package client.component
 
 import client.component.Menu.MenuItem
-import org.scalajs.dom.{Event, window}
 import org.scalajs.dom.html.{Anchor, Element}
+import org.scalajs.dom.window
 
 import scalatags.JsDom.all._
 
