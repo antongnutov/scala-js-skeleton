@@ -3,14 +3,12 @@ package client
 import client.page.Layout
 import org.scalajs.dom.{Event, window}
 
-import scala.scalajs.js.JSApp
-
 /**
   * @author Anton Gnutov
   */
-object Application extends JSApp {
+object Application {
 
-  private def onPageLoaded(e: Event) = {
+  private def onPageLoaded(e: Event): Unit = {
     val layout = Layout()
 
     Router.init(Map(
@@ -20,7 +18,7 @@ object Application extends JSApp {
     ))
   }
 
-  override def main(): Unit = {
+  def main(args: Array[String]): Unit = {
     window.onload = onPageLoaded _
   }
 }

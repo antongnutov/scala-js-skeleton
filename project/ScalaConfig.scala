@@ -13,5 +13,5 @@ object ScalaConfig {
     "-Xlint"
   ))
 
-  val version = "2.12.3"
+  val version = "2.12.4"
 }

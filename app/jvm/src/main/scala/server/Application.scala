@@ -1,29 +1,30 @@
 package server
 
+import cats.effect.IO
 import com.typesafe.config.{Config, ConfigFactory}
+import fs2.Stream
 import org.http4s.server.blaze._
-import org.http4s.server.{Server, ServerApp}
+import org.http4s.util.StreamApp
+import org.http4s.util.StreamApp.ExitCode
 
-import scalaz.concurrent.Task
-
-object Application extends ApplicationService with ServerApp with LazyLogging with JokesGenerator {
+object Application extends StreamApp[IO] with ApplicationService with LazyLogging with JokesGenerator {
 
   val config: Config = ConfigFactory.load()
 
-  override def server(args: List[String]): Task[Server] = {
+  override def stream(args: List[String], requestShutdown: IO[Unit]): Stream[IO, ExitCode] = {
 
     printRuntimeInfo()
 
     val host = config.getString("http.host")
     val port = config.getInt("http.port")
 
-    BlazeBuilder
+    BlazeBuilder[IO]
       .bindHttp(port, host)
       .mountService(service, "/")
-      .start
+      .serve
   }
 
-  private def printRuntimeInfo() = {
+  private def printRuntimeInfo(): Unit = {
     val runtime = Runtime.getRuntime
     val mb = 1024 * 1024
     val maxMemoryInMb = runtime.maxMemory() / mb

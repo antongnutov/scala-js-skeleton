@@ -1,8 +1,9 @@
 package server
 
+import cats.effect.IO
 import com.typesafe.config.{Config, ConfigFactory}
 import org.http4s._
-import org.http4s.dsl.uri
+import org.http4s.dsl.io._
 import org.http4s.util.CaseInsensitiveString
 import org.scalatest.{Matchers, WordSpec}
 
@@ -16,38 +17,38 @@ class ApplicationServiceSpec extends WordSpec with Matchers with ApplicationServ
     var length: Int = 0
 
     "answer response for /" in {
-      val req = Request(Method.GET, uri("/"))
-      val response = service(req).unsafePerformSync
+      val req = Request[IO](Method.GET, uri("/"))
+      val response = service.orNotFound.run(req).unsafeRunSync()
 
       response.status shouldEqual Status.Ok
-      length = response.as[String].unsafePerformSync.length
+      length = response.as[String].unsafeRunSync().length
     }
 
     "answer gzipped response for /" in {
       val acceptHeader = Header("Accept-Encoding", ContentCoding.gzip.coding.value)
-      val req = Request(Method.GET, uri("/")).putHeaders(acceptHeader)
+      val req = Request[IO](Method.GET, uri("/")).putHeaders(acceptHeader)
 
-      val response = service(req).unsafePerformSync
+      val response = service.orNotFound.run(req).unsafeRunSync()
 
       response.status shouldEqual Status.Ok
       response.headers.get(CaseInsensitiveString("Content-Encoding")) shouldEqual Some(Header("Content-Encoding", "gzip"))
-      val size = response.as[String].unsafePerformSync.length
+      val size = response.as[String].unsafeRunSync().length
       size should be < length
     }
 
     "answer NotFound for unexisted resource" in {
-      val req = Request(Method.GET, uri("/images/ololo100500.jpeg"))
-      val response = service(req).unsafePerformSync
+      val req = Request[IO](Method.GET, uri("/images/ololo100500.jpeg"))
+      val response = service.orNotFound.run(req).unsafeRunSync()
 
       response.status shouldEqual Status.NotFound
     }
 
     "answer joke on /getJoke request" in {
-      val req = Request(Method.GET, uri("/getJoke"))
-      val response = service(req).unsafePerformSync
+      val req = Request[IO](Method.GET, uri("/getJoke"))
+      val response = service.orNotFound.run(req).unsafeRunSync()
 
       response.status shouldEqual Status.Ok
-      val joke = response.as[String].unsafePerformSync
+      val joke = response.as[String].unsafeRunSync()
       jokes should contain(joke)
     }
   }

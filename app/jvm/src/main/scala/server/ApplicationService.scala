@@ -2,12 +2,11 @@ package server
 
 import java.io.File
 
+import cats.effect.IO
 import com.typesafe.config.Config
-import org.http4s.dsl._
+import org.http4s.dsl.io._
 import org.http4s.server.middleware.GZip
 import org.http4s.{HttpService, Request, StaticFile}
-
-import scalaz.concurrent.Task
 
 /**
   * @author Anton Gnutov
@@ -19,14 +18,14 @@ trait ApplicationService { self: LazyLogging with JokesGenerator =>
 
   private val staticExtensions = List(".js", ".css", ".png", ".jpg", ".jpeg", ".map", ".html", ".webm", ".ico")
 
-  private def staticFile(file: String, request: Request) = {
-    StaticFile.fromFile(new File(staticPath + file), Some(request)).map(Task.now).getOrElse(NotFound())
+  private def staticFile(file: String, request: Request[IO]) = {
+    StaticFile.fromFile(new File(staticPath + file), Some(request)).getOrElseF(NotFound())
   }
 
   private def isStaticResource(resource: String): Boolean = staticExtensions.exists(resource.endsWith)
 
-  val service = GZip(
-    HttpService {
+  val service: HttpService[IO] = GZip(
+    HttpService[IO] {
       case request@GET -> Root =>
         logger.debug("Detected connection from '{}'", request.remoteAddr.getOrElse(""))
         staticFile("index.html", request)
