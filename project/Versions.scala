@@ -1,5 +1,5 @@
 object Versions {
-  val http4s = "0.18.0-M4"
+  val http4s = "0.18.0-M5"
 
   val scalaTags = "0.6.7"
 

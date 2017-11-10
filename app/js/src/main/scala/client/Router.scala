@@ -10,7 +10,7 @@ object Router {
 
   window.onhashchange = (_: HashChangeEvent) => routeChanged()
 
-  private def routeChanged() = {
+  private def routeChanged(): Unit = {
     val route = window.location.hash
     subscriptions.get(route) match {
       case Some(action) => action(())

@@ -4,8 +4,7 @@ import cats.effect.IO
 import com.typesafe.config.{Config, ConfigFactory}
 import fs2.Stream
 import org.http4s.server.blaze._
-import org.http4s.util.StreamApp
-import org.http4s.util.StreamApp.ExitCode
+import org.http4s.util.{ExitCode, StreamApp}
 
 object Application extends StreamApp[IO] with ApplicationService with LazyLogging with JokesGenerator {
 
